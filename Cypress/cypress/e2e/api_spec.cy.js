@@ -1,19 +1,41 @@
-describe('Create User API', () => {
+describe('User API', () => {
   const apiUrl = 'https://jsonplaceholder.typicode.com/users';
+  let userId;
+  
+  beforeEach(() => {
+    cy.fixture('user').then((userData) => {
+      userData.id = null;
 
-  it('should create a new user with correct information', () => {
-    const newUser = {
-      name: 'Test User',
-      email: 'testuser@example.com',
-      phone: '555-555-5555',
-    };
-
-    cy.request('POST', apiUrl, newUser).then((response) => {
-      expect(response.status).to.eq(201);
-      expect(response.body.name).to.eq(newUser.name);
-      expect(response.body.email).to.eq(newUser.email);
-      expect(response.body.phone).to.eq(newUser.phone);
+      cy.request('POST', apiUrl, userData).then((response) => {
+        expect(response.status).to.eq(201);
+        userId = response.body.id;
+      });
     });
   });
 
+  afterEach(() => {
+    cy.request('DELETE', `${apiUrl}/${userId}`).then((response) => {
+      expect(response.status).to.eq(200);
+    });
+  });
+
+  it('should update the user name', () => {
+    cy.fixture('users').then((userData) => {
+      const newName = 'New Name';
+      userData.name = newName;
+
+      cy.request('PUT', `${apiUrl}/${userId}`, userData).then((response) => {
+        expect(response.status).to.eq(200);
+        expect(response.body.name).to.eq(newName);
+      });
+    });
+  });
+
+  it('should retrieve the user by ID', () => {
+    cy.request('GET', `${apiUrl}/${userId}`).then((response) => {
+      expect(response.status).to.eq(200);
+      expect(response.body.id).to.eq(userId);
+    });
+  });
 });
+

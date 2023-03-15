@@ -12,8 +12,6 @@ describe('Login Page', () => {
     LoginPage.fillUsername(username)
     LoginPage.fillPassword(password)
     LoginPage.submit()
-
-  //  cy.url().should('include', '/dashboard')
     cy.contains('Welcome, John!').should('be.visible')
   })
 
@@ -24,7 +22,6 @@ describe('Login Page', () => {
     LoginPage.fillUsername(username)
     LoginPage.fillPassword(password)
     LoginPage.submit() 
-
     cy.contains('Invalid username/password').should('be.visible')
   })
 })
