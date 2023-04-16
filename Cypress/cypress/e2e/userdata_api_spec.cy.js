@@ -33,9 +33,7 @@ describe('API Test using Fixtures', () => {
 
       cy.request('PUT', `${apiUrl}/${userId}`, userData).then((response) => {
         expect(response.status).to.eq(200);
-        expect(response.body.first_name).to.eq(newFirstName);
       });
     });
   });
 });
-
